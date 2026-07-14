@@ -36,7 +36,7 @@ esac
 }
 
 STAGE_ROOT="$ROOT/.local-addons-stage"
-STAGE="$STAGE_ROOT/debug/tmcguirefl/jlinter"
+STAGE="$STAGE_ROOT/tmcguire/jlinter"
 LIST="$STAGE_ROOT/files.list"
 rm -rf "$STAGE_ROOT"
 mkdir -p "$STAGE"
@@ -46,7 +46,7 @@ mkdir -p "$STAGE"
 9!:35]0
 validate=. 3 : 0
 0!:0 <y
-ok=. (0 < # CAPTION) *. (0 < # VERSION) *. ('debug/tmcguirefl/jlinter' -: FOLDER)
+ok=. (0 < # CAPTION) *. (0 < # VERSION) *. ('tmcguire/jlinter' -: FOLDER)
 if. -. ok do.
   smoutput 'bad CAPTION/VERSION/FOLDER'
   smoutput CAPTION;VERSION;FOLDER
@@ -103,7 +103,7 @@ done < "$LIST"
   exit 1
 }
 
-TARGET="$ADDONS/debug/tmcguirefl/jlinter"
+TARGET="$ADDONS/tmcguire/jlinter"
 mkdir -p "$ADDONS/debug"
 rm -rf "$TARGET"
 mkdir -p "$TARGET"
@@ -118,13 +118,13 @@ FIXTURE="$ROOT/fixtures/good_mean.ijs"
 check=. 3 : 0
 smoutput 'install' ; jpath '~install'
 smoutput 'addons ' ; jpath '~addons'
-load 'debug/tmcguirefl/jlinter/jlinter'
+load 'tmcguire/jlinter'
 if. 3 ~: 4!:0 <'report_jlinter_' do. smoutput 'report_jlinter_ missing' [ 1 return. end.
 r=. report_jlinter_ 'text';y
 c=. exitcode_jlinter_ ''
 smoutput r
 if. 0 ~: c do. smoutput 'expected exitcode 0' [ 1 return. end.
-load jpath '~addons/debug/tmcguirefl/jlinter/mcp_j_lint.ijs'
+load jpath '~addons/tmcguire/jlinter/mcp_j_lint.ijs'
 if. 3 ~: 4!:0 <'mcp_j_lint_z_' do. smoutput 'mcp_j_lint_z_ missing' [ 1 return. end.
 smoutput mcp_j_lint_z_ ('{"path":"' , y , '","format":"json"}')
 0

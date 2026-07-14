@@ -10,7 +10,7 @@ NB. Result:
 NB.   {"ok":bool,"exit_code":0|1,"format":"…","path":"…","report":…}
 NB.
 NB. Prefer after install:
-NB.   load '~addons/debug/tmcguirefl/jlinter/mcp_j_lint.ijs'
+NB.   load '~addons/tmcguire/jlinter/mcp_j_lint.ijs'
 NB. or checkout path.
 
 NB. Capture this file's directory before other loads change 4!:3.

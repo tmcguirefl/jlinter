@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Symlink this checkout into the private J install's ~addons/debug/tmcguirefl/jlinter:
-#   $HOME/j9.8/addons/debug/tmcguirefl/jlinter  →  this repo
+# Symlink this checkout into the private J install's ~addons/tmcguire/jlinter:
+#   $HOME/j9.8/addons/tmcguire/jlinter  →  this repo
 #
-# Then:  load 'debug/tmcguirefl/jlinter/jlinter'
+# Then:  load 'tmcguire/jlinter'
 # Prefer this account's ~/j9.8 engine; does not write under /Applications/j9.8.
 set -euo pipefail
 
@@ -46,7 +46,7 @@ case "$ADDONS" in
     ;;
 esac
 
-TARGET_DIR="$ADDONS/debug/tmcguirefl"
+TARGET_DIR="$ADDONS/tmcguire"
 TARGET="$TARGET_DIR/jlinter"
 mkdir -p "$TARGET_DIR"
 
@@ -61,7 +61,7 @@ if [[ -e "$TARGET" && ! -L "$TARGET" ]]; then
     rm -rf "$TARGET"
   else
     echo "install_local: $TARGET exists and is not a symlink; refuse to overwrite" >&2
-    echo "  (real install left by verify_jal_install.sh is fine for load 'debug/tmcguirefl/jlinter/jlinter')" >&2
+    echo "  (real install left by verify_jal_install.sh is fine for load 'tmcguire/jlinter')" >&2
     echo "  use: $0 --force   to replace it with a checkout symlink for live edits" >&2
     exit 1
   fi
@@ -72,4 +72,4 @@ echo "install_local: engine   $JCONSOLE"
 echo "install_local: ~addons  $ADDONS"
 echo "install_local: link     $TARGET -> $ROOT"
 echo "Try:  \$HOME/j9.8/bin/jconsole"
-echo "      load 'debug/tmcguirefl/jlinter/jlinter'"
+echo "      load 'tmcguire/jlinter'"

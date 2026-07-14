@@ -1,7 +1,10 @@
-debug/tmcguirefl/jlinter history
+tmcguire/jlinter history
+
+0.1.2 2026-07-14
+- FOLDER is tmcguire/jlinter (two-level shortname: load 'tmcguire/jlinter')
 
 0.1.1 2026-07-14
-- FOLDER renamed to debug/tmcguirefl/jlinter (namespaced, not stock addons)
+- experimented with namespaced FOLDER under debug/
 
 0.1.0 2026-07-14
 - Initial release: headless wrapper around debug/lint
