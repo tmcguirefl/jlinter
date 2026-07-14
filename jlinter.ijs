@@ -1,12 +1,12 @@
-NB. debug/jlinter - headless wrapper around debug/lint
+NB. debug/tmcguirefl/jlinter - headless wrapper around debug/lint
 NB.
 NB. After install from GitHub / JAL:
-NB.   load 'debug/jlinter'
+NB.   load 'debug/tmcguirefl/jlinter/jlinter'
 NB.   echo report_jlinter_ 'markdown';'path/to/script.ijs'
 NB.   echo exitcode_jlinter_ ''
 NB.
 NB. Optional MCP adapter (j-mcp j_tool_register):
-NB.   load '~addons/debug/jlinter/mcp_j_lint.ijs'
+NB.   load '~addons/debug/tmcguirefl/jlinter/mcp_j_lint.ijs'
 
 NB. Capture this script's directory *before* any require (which would
 NB. change {: 4!:3 '').

@@ -20,7 +20,7 @@ j-mcp  (stdio)
    │  session_eval → mcp_j_lint_z_ <json_string>
    ▼
 J session "jlinter" (or any name you choose)
-   load 'debug/jlinter/mcp_j_lint'  NB. or path to checkout mcp_j_lint.ijs
+   load 'debug/tmcguirefl/jlinter/mcp_j_lint'  NB. or path to checkout mcp_j_lint.ijs
    load report.ijs via mcp adapter / jlinter.ijs  →  debug/lint  →  JSON/markdown/text
 ```
 

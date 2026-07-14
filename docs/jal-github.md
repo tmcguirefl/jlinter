@@ -21,7 +21,7 @@ From the Developers Guide, **required** manifest nouns:
 |------|---------|
 | `CAPTION` | one-line description |
 | `VERSION` | `major.minor.build` e.g. `0.1.0` |
-| `FOLDER` | install path under `~addons`, e.g. `debug/jlinter` |
+| `FOLDER` | install path under `~addons`, e.g. `debug/tmcguirefl/jlinter` |
 | `FILES` | newline list of files and dirs (`dir/` ends with `/`) |
 
 Optional: `DESCRIPTION`, `DEPENDS`, `PLATFORMS`, `RELEASE`, `FILESxxx`.
@@ -32,9 +32,9 @@ Only **global noun** definitions are allowed in `manifest.ijs` (character string
 
 | Item | Value |
 |------|--------|
-| FOLDER | `debug/jlinter` |
+| FOLDER | `debug/tmcguirefl/jlinter` |
 | VERSION | see `manifest.ijs` |
-| Entry script | `jlinter.ijs` → `load 'debug/jlinter'` |
+| Entry script | `jlinter.ijs` → `load 'debug/tmcguirefl/jlinter/jlinter'` |
 | GitHub owner | `tmcguirefl` |
 | Suggested GitHub repos | `tmcguirefl/jlinter` or `tmcguirefl/debug_jlinter` |
 
@@ -43,10 +43,14 @@ After push:
 ```j
 load 'pacman'
 install 'github:tmcguirefl/jlinter'     NB. or @main @v0.1.0 etc.
-load 'debug/jlinter'
+load 'debug/tmcguirefl/jlinter/jlinter'
 ```
 
-Note the load path is **`debug/jlinter`**, not the GitHub repo name.
+`FOLDER` is **`debug/tmcguirefl/jlinter`** (three levels under `~addons` so it is distinct from stock `debug/*` addons). Shortname load must include the script name:
+
+```j
+load 'debug/tmcguirefl/jlinter/jlinter'
+```
 
 ## Official catalog (optional)
 
@@ -58,14 +62,14 @@ Note the load path is **`debug/jlinter`**, not the GitHub repo name.
 
 ```bash
 source ./scripts/jenv.sh          # prefer $HOME/j9.8 engine
-./scripts/install_local.sh        # symlink into $HOME/j9.8/addons/debug/jlinter
+./scripts/install_local.sh        # symlink into $HOME/j9.8/addons/debug/tmcguirefl/jlinter
 ```
 
 Uses this account’s private install (`~/j9.8`); refuses to write under `/Applications/j9.8`.
 ## Checklist before `git push`
 
 - [ ] `manifest.ijs` loads as nouns only (`0!:0 <'manifest.ijs'` shows no verbs)
-- [ ] `FOLDER` is lowercase two-level path
+- [ ] `FOLDER` is lowercase path under category (here `debug/tmcguirefl/jlinter`)
 - [ ] `FILES` lists every distributed path (trailing `/` on directories)
 - [ ] `VERSION` / `history.txt` present
 - [ ] `./scripts/smoke.sh` passes

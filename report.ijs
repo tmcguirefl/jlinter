@@ -1,7 +1,7 @@
 NB. jlinter report — headless wrapper around addons/debug/lint
 NB. Produces text / markdown / json for agent consumption.
 NB.
-NB. Load: load 'debug/jlinter'  or load this file
+NB. Load: load 'debug/tmcguirefl/jlinter/jlinter'  or load this file
 NB. Use:  report_jlinter_ 'markdown';'/path/to/script.ijs'
 NB.       report_jlinter_ 'json';'source='; , code
 NB.       exitcode_jlinter_ ''

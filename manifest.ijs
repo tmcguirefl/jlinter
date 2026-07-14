@@ -1,8 +1,8 @@
-NB. manifest for debug/jlinter
+NB. manifest for debug/tmcguirefl/jlinter
 NB. See: https://code.jsoftware.com/wiki/Addons/Developers_Guide
 NB. Install from GitHub (this author's repo):
 NB.   install 'github:tmcguirefl/jlinter'
-NB.   load 'debug/jlinter'
+NB.   load 'debug/tmcguirefl/jlinter/jlinter'
 NB.
 NB. Optional repo name synonym often used for JAL mirrors:
 NB.   install 'github:tmcguirefl/debug_jlinter'
@@ -17,7 +17,7 @@ and other agent/CLI workflows. Includes an optional MCP adapter for
 j-mcp (j_tool_register) and a bash CLI under bin/.
 
 Usage after install:
-  load 'debug/jlinter'
+  load 'debug/tmcguirefl/jlinter/jlinter'
   echo report_jlinter_ 'markdown';'path/to/script.ijs'
   echo exitcode_jlinter_ ''
 
@@ -27,16 +27,16 @@ CLI (from a checkout or if bin is on PATH):
 
 GitHub install (Pacman) into the current J's ~addons (e.g. ~/j9.8/addons):
   install 'github:tmcguirefl/jlinter'
-  load 'debug/jlinter'
+  load 'debug/tmcguirefl/jlinter/jlinter'
 
 Depends on debug/lint (stock) and convert/json (stock).
 )
 
-VERSION=: '0.1.0'
+VERSION=: '0.1.1'
 
 RELEASE=: 'j901'
 
-FOLDER=: 'debug/jlinter'
+FOLDER=: 'debug/tmcguirefl/jlinter'
 
 PLATFORMS=: ''
 

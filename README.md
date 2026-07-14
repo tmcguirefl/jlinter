@@ -1,4 +1,4 @@
-# jlinter (`debug/jlinter`)
+# jlinter (`debug/tmcguirefl/jlinter`)
 
 Headless static checker for [J](https://www.jsoftware.com/) scripts, meant for **Claude Code** and other agent workflows.
 
@@ -22,7 +22,7 @@ On the machine where this repo was developed, the **private** install is preferr
 
 ```bash
 source ./scripts/jenv.sh          # sets JLINTER_JCONSOLE, JHOME, PATH
-./scripts/install_local.sh        # symlink repo → ~/j9.8/addons/debug/jlinter
+./scripts/install_local.sh        # symlink repo → ~/j9.8/addons/debug/tmcguirefl/jlinter
 ./bin/jlinter fixtures/good_mean.ijs
 ```
 
@@ -31,22 +31,22 @@ Resolution order: `JLINTER_JCONSOLE` → `JCONSOLE` → `$HOME/j9.8/bin/jconsole
 
 ## Install (J Package Manager / GitHub)
 
-This repo is laid out as a [J addon](https://code.jsoftware.com/wiki/Addons/Developers_Guide) with a valid `manifest.ijs` and `FOLDER=: 'debug/jlinter'`. Pacman can install directly from GitHub without listing on the official JAL menu. See also [Pacman § Github](https://code.jsoftware.com/wiki/Pacman#Github).
+This repo is laid out as a [J addon](https://code.jsoftware.com/wiki/Addons/Developers_Guide) with a valid `manifest.ijs` and `FOLDER=: 'debug/tmcguirefl/jlinter'`. Pacman can install directly from GitHub without listing on the official JAL menu. See also [Pacman § Github](https://code.jsoftware.com/wiki/Pacman#Github).
 
 ```j
 load 'pacman'
 install 'github:tmcguirefl/jlinter'          NB. or tmcguirefl/debug_jlinter / @commit
-load 'debug/jlinter'
+load 'debug/tmcguirefl/jlinter/jlinter'
 echo report_jlinter_ 'markdown';'path/to/script.ijs'
 ```
 
-`tmcguirefl` is the GitHub owner for this addon once published. Repo names often follow the addon convention `debug_jlinter` when hosted under jsoftware or personal mirrors; the **installed path is always the `FOLDER` from the manifest** (`~addons/debug/jlinter`), not the GitHub name.
+`tmcguirefl` is the GitHub owner for this addon once published. Repo names often follow the addon convention `debug_jlinter` when hosted under jsoftware or personal mirrors; the **installed path is always the `FOLDER` from the manifest** (`~addons/debug/tmcguirefl/jlinter`), not the GitHub name.
 
 After install:
 
 ```j
-load 'debug/jlinter'
-load 'debug/jlinter/mcp_j_lint'   NB. optional MCP adapter
+load 'debug/tmcguirefl/jlinter/jlinter'
+load 'debug/tmcguirefl/jlinter/mcp_j_lint'   NB. optional MCP adapter
 ```
 
 ### Local install from a checkout (symlink)
@@ -54,13 +54,13 @@ load 'debug/jlinter/mcp_j_lint'   NB. optional MCP adapter
 ```bash
 source ./scripts/jenv.sh
 ./scripts/install_local.sh
-# → ln -sfn "$(pwd)" "$HOME/j9.8/addons/debug/jlinter"
+# → ln -sfn "$(pwd)" "$HOME/j9.8/addons/debug/tmcguirefl/jlinter"
 ```
 
 Then (using the private engine):
 
 ```j
-load 'debug/jlinter'
+load 'debug/tmcguirefl/jlinter/jlinter'
 ```
 
 ## CLI (checkout)
@@ -116,7 +116,7 @@ Register `j_lint` on **j-mcp** via `j_tool_register`. Adapter: [`mcp_j_lint.ijs`
 ### From J
 
 ```j
-load 'debug/jlinter'   NB. when installed
+load 'debug/tmcguirefl/jlinter/jlinter'   NB. when installed
 NB. or: load '/path/to/checkout/jlinter.ijs'
 echo report_jlinter_ 'markdown';'/path/to/script.ijs'
 echo exitcode_jlinter_ ''
@@ -130,10 +130,10 @@ Required by [Addons Developers Guide](https://code.jsoftware.com/wiki/Addons/Dev
 | File | Role |
 |------|------|
 | `manifest.ijs` | `CAPTION`, `VERSION`, `FOLDER`, `FILES`, … |
-| `jlinter.ijs` | shortname entry for `load 'debug/jlinter'` |
+| `jlinter.ijs` | shortname entry for `load 'debug/tmcguirefl/jlinter/jlinter'` |
 | `report.ijs` | analysis + formatters (locale `jlinter`) |
 | `history.txt` | changelog (version bumps go here + `VERSION=`) |
-| `FOLDER` | `debug/jlinter` |
+| `FOLDER` | `debug/tmcguirefl/jlinter` |
 
 Repo convention for jsoftware hosting: name `debug_jlinter` (category_folder). Personal repos can use any name; **FOLDER in the manifest is what matter for install**.
 
@@ -144,7 +144,7 @@ To publish into the official list later: validate with `install 'github:…'`, t
 ```bash
 source ./scripts/jenv.sh
 ./scripts/smoke.sh                 # CLI fixtures on private engine
-./scripts/verify_jal_install.sh    # stage FILES → ~/j9.8/addons/debug/jlinter + shortname load
+./scripts/verify_jal_install.sh    # stage FILES → ~/j9.8/addons/debug/tmcguirefl/jlinter + shortname load
 ```
 
 `verify_jal_install.sh` proves the package layout works **without** GitHub by doing a real (non-symlink) install under the private `~addons`. After you push to GitHub:

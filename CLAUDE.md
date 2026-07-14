@@ -4,7 +4,7 @@ Guidance for Claude Code when working in this repository.
 
 ## Goal
 
-Provide a **headless** J lint tool so agents can check and correct generated J without Qt. Core analysis is the stock addon `debug/lint`; this project is a report/CLI wrapper packaged as JAL addon **`debug/jlinter`**.
+Provide a **headless** J lint tool so agents can check and correct generated J without Qt. Core analysis is the stock addon `debug/lint`; this project is a report/CLI wrapper packaged as JAL addon **`debug/tmcguirefl/jlinter`**.
 
 ## Commands
 
@@ -14,7 +14,7 @@ Provide a **headless** J lint tool so agents can check and correct generated J w
 ./bin/jlinter -f text path/to/file.ijs
 cat src.ijs | ./bin/jlinter --stdin
 ./scripts/smoke.sh
-./scripts/install_local.sh       # symlink checkout into ~/j9.8/addons/debug/jlinter
+./scripts/install_local.sh       # symlink checkout into ~/j9.8/addons/debug/tmcguirefl/jlinter
 ./scripts/verify_jal_install.sh  # real copy install + shortname load prove JAL layout
 source ./scripts/jenv.sh         # PATH + JLINTER_JCONSOLE + JHOME for this shell
 ```
@@ -35,13 +35,13 @@ This tree is a valid addon for:
 
 ```j
 install 'github:tmcguirefl/jlinter'
-load 'debug/jlinter'
+load 'debug/tmcguirefl/jlinter/jlinter'
 ```
 
 Key rules ([Developers Guide](https://code.jsoftware.com/wiki/Addons/Developers_Guide), [Pacman Github](https://code.jsoftware.com/wiki/Pacman#Github)):
 
 - Root `manifest.ijs` must define **CAPTION**, **VERSION**, **FOLDER**, **FILES**
-- `FOLDER=: 'debug/jlinter'` (lowercase, no spaces)
+- `FOLDER=: 'debug/tmcguirefl/jlinter'` (lowercase, no spaces)
 - Prefer lower-case paths; GitHub repo often named `debug_jlinter` (category_folder)
 - Bump **VERSION** when you want published rebuilds
 - Do not put non-noun definitions in `manifest.ijs`
@@ -59,8 +59,8 @@ Key rules ([Developers Guide](https://code.jsoftware.com/wiki/Addons/Developers_
 
 | Path | Role |
 |------|------|
-| `manifest.ijs` | JAL/Pacman manifest (`FOLDER` debug/jlinter) |
-| `jlinter.ijs` | entry for `load 'debug/jlinter'` |
+| `manifest.ijs` | JAL/Pacman manifest (`FOLDER` debug/tmcguirefl/jlinter) |
+| `jlinter.ijs` | entry for `load 'debug/tmcguirefl/jlinter/jlinter'` |
 | `report.ijs` | locale `jlinter`: `report`, `exitcode`, formatters |
 | `mcp_j_lint.ijs` | `mcp_j_lint_z_` for j-mcp |
 | `bin/jlinter` | bash CLI |
