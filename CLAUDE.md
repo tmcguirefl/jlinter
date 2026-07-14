@@ -14,7 +14,7 @@ Provide a **headless** J lint tool so agents can check and correct generated J w
 ./bin/jlinter -f text path/to/file.ijs
 cat src.ijs | ./bin/jlinter --stdin
 ./scripts/smoke.sh
-./scripts/install_local.sh       # symlink checkout into ~/j9.8/addons/tmcguire/jlinter
+./scripts/install_local.sh --force  # copy runtime FILES only into ~/j9.8/addons/tmcguire/jlinter
 ./scripts/verify_jal_install.sh  # real copy install + shortname load prove JAL layout
 source ./scripts/jenv.sh         # PATH + JLINTER_JCONSOLE + JHOME for this shell
 ```

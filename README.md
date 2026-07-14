@@ -22,7 +22,7 @@ On the machine where this repo was developed, the **private** install is preferr
 
 ```bash
 source ./scripts/jenv.sh          # sets JLINTER_JCONSOLE, JHOME, PATH
-./scripts/install_local.sh        # symlink repo → ~/j9.8/addons/tmcguire/jlinter
+./scripts/install_local.sh --force  # copy runtime FILES → ~/j9.8/addons/tmcguire/jlinter
 ./bin/jlinter fixtures/good_mean.ijs
 ```
 
@@ -49,13 +49,17 @@ load 'tmcguire/jlinter'
 load 'tmcguire/jlinter/mcp_j_lint'   NB. optional MCP adapter
 ```
 
-### Local install from a checkout (symlink)
+### Local install from a checkout (runtime files only)
 
 ```bash
 source ./scripts/jenv.sh
-./scripts/install_local.sh
-# → ln -sfn "$(pwd)" "$HOME/j9.8/addons/tmcguire/jlinter"
+./scripts/install_local.sh --force
+# → copies only FILES from manifest.ijs into
+#   $HOME/j9.8/addons/tmcguire/jlinter/
+#   (manifest + jlinter.ijs + report.ijs + mcp_j_lint.ijs + history.txt)
 ```
+
+The full git tree (bin/, docs/, fixtures/, scripts/, …) stays in the development checkout and is **not** symlinked into `~addons`. After editing core `.ijs` sources, re-run `install_local.sh --force` (or GitHub `install`) so `~addons` picks up changes.
 
 Then (using the private engine):
 

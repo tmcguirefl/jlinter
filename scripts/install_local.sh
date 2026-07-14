@@ -1,14 +1,27 @@
 #!/usr/bin/env bash
-# Symlink this checkout into the private J install's ~addons/tmcguire/jlinter:
-#   $HOME/j9.8/addons/tmcguire/jlinter  →  this repo
+# Install a *runtime* copy of tmcguire/jlinter into the private J tree:
+#   $HOME/j9.8/addons/tmcguire/jlinter/
 #
-# Then:  load 'tmcguire/jlinter'
+# Only runtime FILES are placed there (not the whole git checkout).
 # Prefer this account's ~/j9.8 engine; does not write under /Applications/j9.8.
+#
+# Usage:
+#   ./scripts/install_local.sh           # copy runtime FILES only
+#   ./scripts/install_local.sh --force   # replace existing target
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=resolve_jconsole.sh
 source "$ROOT/scripts/resolve_jconsole.sh"
+
+# Must match FILES in manifest.ijs (runtime package only)
+RUNTIME_FILES=(
+  manifest.ijs
+  jlinter.ijs
+  report.ijs
+  mcp_j_lint.ijs
+  history.txt
+)
 
 JCONSOLE="$(jlinter_resolve_jconsole)" || {
   echo "install_local: jconsole not found; set JLINTER_JCONSOLE to \$HOME/j9.8/bin/jconsole" >&2
@@ -23,7 +36,6 @@ EOF
 )"
 
 if [[ -z "$ADDONS" || ! -d "$ADDONS" ]]; then
-  # Fallback to the known private install layout
   ADDONS="${HOME}/j9.8/addons"
 fi
 
@@ -37,7 +49,6 @@ if [[ ! -w "$ADDONS" ]]; then
   exit 1
 fi
 
-# Refuse accidental writes into the multi-account system apps tree
 case "$ADDONS" in
   /Applications/*|/System/*)
     echo "install_local: refusing to install into system tree: $ADDONS" >&2
@@ -55,21 +66,37 @@ if [[ "${1:-}" == "--force" || "${1:-}" == "-f" ]]; then
   FORCE=1
 fi
 
-if [[ -e "$TARGET" && ! -L "$TARGET" ]]; then
+if [[ -e "$TARGET" || -L "$TARGET" ]]; then
   if [[ "$FORCE" -eq 1 ]]; then
-    echo "install_local: removing existing non-symlink install at $TARGET"
+    echo "install_local: replacing existing target $TARGET"
     rm -rf "$TARGET"
   else
-    echo "install_local: $TARGET exists and is not a symlink; refuse to overwrite" >&2
-    echo "  (real install left by verify_jal_install.sh is fine for load 'tmcguire/jlinter')" >&2
-    echo "  use: $0 --force   to replace it with a checkout symlink for live edits" >&2
+    echo "install_local: $TARGET already exists; refuse to overwrite" >&2
+    echo "  use: $0 --force" >&2
     exit 1
   fi
 fi
 
-ln -sfn "$ROOT" "$TARGET"
+mkdir -p "$TARGET"
+
+for rel in "${RUNTIME_FILES[@]}"; do
+  if [[ ! -f "$ROOT/$rel" ]]; then
+    echo "install_local: missing source file: $ROOT/$rel" >&2
+    exit 1
+  fi
+  cp "$ROOT/$rel" "$TARGET/$rel"
+  echo "install_local: + $rel"
+done
+
+# Guard: never leave a symlink to the full checkout
+if [[ -L "$TARGET" ]]; then
+  echo "install_local: internal error: target is a symlink" >&2
+  exit 1
+fi
+
 echo "install_local: engine   $JCONSOLE"
 echo "install_local: ~addons  $ADDONS"
-echo "install_local: link     $TARGET -> $ROOT"
-echo "Try:  \$HOME/j9.8/bin/jconsole"
-echo "      load 'tmcguire/jlinter'"
+echo "install_local: target   $TARGET  (runtime files only)"
+echo "install_local: listing:"
+ls -la "$TARGET"
+echo "Try:  load 'tmcguire/jlinter'"

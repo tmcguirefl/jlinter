@@ -61,10 +61,11 @@ load 'tmcguire/jlinter'
 
 ```bash
 source ./scripts/jenv.sh          # prefer $HOME/j9.8 engine
-./scripts/install_local.sh        # symlink into $HOME/j9.8/addons/tmcguire/jlinter
+./scripts/install_local.sh --force   # copy runtime FILES only into ~addons/tmcguire/jlinter
 ```
 
 Uses this account’s private install (`~/j9.8`); refuses to write under `/Applications/j9.8`.
+**`FILES` in the manifest must stay minimal** (J scripts needed at runtime)—not `bin/`, `docs/`, `fixtures/`, or the rest of the development tree.
 ## Checklist before `git push`
 
 - [ ] `manifest.ijs` loads as nouns only (`0!:0 <'manifest.ijs'` shows no verbs)
