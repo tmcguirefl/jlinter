@@ -4,23 +4,37 @@ NB.
 NB. Args JSON:
 NB.   {"path":"/file.ijs"}
 NB.   {"source":"…j code…"}
-NB.   optional "format": "json" (default) | "markdown" | "text"
+NB.   optional "format": "json" (default) | "markdown" |"text"
 NB.
 NB. Result:
 NB.   {"ok":bool,"exit_code":0|1,"format":"…","path":"…","report":…}
 NB.
 NB. Prefer after install:
-NB.   load '~addons/tmcguire/jlinter/mcp_j_lint.ijs'
-NB. or checkout path.
+NB.   load 'tmcguire/jlinter/mcp_j_lint'
+NB.   or load jpath '~addons/tmcguire/jlinter/mcp_j_lint.ijs'
 
-NB. Capture this file's directory before other loads change 4!:3.
-JLINTER_MCP_DIR_z_=: 3 : 0 ''
+NB. Locate report.ijs (prefer installed shortname path; never trust {:4!:3 after
+NB. earlier loads which may point at fixtures or unrelated scripts).
+(3 : 0) ''
+  cands=. jpath each 'tmcguire/jlinter/report.ijs';'~addons/tmcguire/jlinter/report.ijs'
   me=. > {: 4!:3 ''
   slash=. me i: '/'
-  (slash + 1) {. me
+  cands=. cands , < ((slash + 1) {. me) , 'report.ijs'
+  found=. 0
+  for_c. cands do.
+    p=. > c
+    if. 1:@(1!:4) :: 0: < p do.
+      load p
+      found=. 1
+      break.
+    end.
+  end.
+  if. -. found do.
+    smoutput 'mcp_j_lint: could not find report.ijs among:'
+    smoutput ; LF , each cands
+  end.
 )
 
-load JLINTER_MCP_DIR_z_ , 'report.ijs'
 require 'convert/json'
 
 NB. x=field name, y=2-row object from convert/json
