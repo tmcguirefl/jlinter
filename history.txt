@@ -1,0 +1,9 @@
+debug/jlinter history
+
+0.1.0 2026-07-14
+- Initial release: headless wrapper around debug/lint
+- report.ijs: markdown / json / text formatters + load probe
+- bin/jlinter CLI for agent fix loops
+- mcp_j_lint.ijs adapter for j-mcp j_tool_register
+- fixtures + smoke tests
+- JAL manifest for GitHub install: install 'github:tmcguirefl/jlinter'

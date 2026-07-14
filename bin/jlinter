@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+# jlinter — headless J static checker for agents / CLI
+# Wraps addons/debug/lint and prints markdown (default), json, or text.
+#
+# Usage:
+#   jlinter [--format markdown|json|text] FILE.ijs
+#   jlinter [--format …] --stdin
+#   jlinter --help
+#
+# Exit: 0 clean; 1 findings or load fail; 2 usage/tool error.
+#
+# Prefer this account's private J install: $HOME/j9.8/bin/jconsole
+# (does not require /Applications/j9.8). Override with JLINTER_JCONSOLE.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck source=../scripts/resolve_jconsole.sh
+source "$ROOT/scripts/resolve_jconsole.sh"
+
+# Load report.ijs directly (avoids side effects of package requires for CLI)
+if [[ -f "$ROOT/report.ijs" ]]; then
+  REPORT="$ROOT/report.ijs"
+elif [[ -f "$ROOT/jlinter.ijs" ]]; then
+  REPORT="$ROOT/jlinter.ijs"
+else
+  REPORT="$ROOT/src/report.ijs"
+fi
+FORMAT="markdown"
+STDIN=0
+FILE=""
+
+die() { echo "jlinter: $*" >&2; exit 2; }
+
+usage() {
+  cat <<'EOF'
+jlinter — headless static check for J scripts (wraps debug/lint)
+
+Usage:
+  jlinter [options] FILE.ijs
+  jlinter [options] --stdin
+
+Options:
+  -f, --format FORMAT   markdown (default) | json | text
+  --stdin               lint source from stdin (temp script)
+  -h, --help            show this help
+
+Environment:
+  JLINTER_JCONSOLE / JCONSOLE   path to jconsole
+  Default search order:
+    $JLINTER_JCONSOLE, $JCONSOLE, $HOME/j9.8/bin/jconsole,
+    /Applications/j9.8/bin/jconsole, PATH
+
+Exit codes:
+  0  clean (no lint findings and top-level load ok)
+  1  findings or load failure
+  2  usage / missing engine / missing input
+
+Examples:
+  jlinter fixtures/bad_undefined.ijs
+  jlinter -f json path/to/script.ijs
+  cat snippet.ijs | jlinter --stdin -f markdown
+EOF
+}
+
+JCONSOLE="$(jlinter_resolve_jconsole)" || die "jconsole not found; set JLINTER_JCONSOLE (e.g. $HOME/j9.8/bin/jconsole)"
+[[ -f "$REPORT" ]] || die "missing report script: $REPORT"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    -f|--format)
+      [[ $# -ge 2 ]] || die "--format needs an argument"
+      FORMAT="$2"; shift 2
+      ;;
+    --stdin) STDIN=1; shift ;;
+    --) shift; break ;;
+    -*) die "unknown option: $1" ;;
+    *)
+      [[ -z "$FILE" ]] || die "only one file allowed"
+      FILE="$1"; shift
+      ;;
+  esac
+done
+
+case "$FORMAT" in
+  markdown|json|text) ;;
+  *) die "format must be markdown|json|text (got $FORMAT)" ;;
+esac
+
+TMP=""
+OUT_FILE=""
+CODE_FILE=""
+cleanup() {
+  [[ -n "${TMP:-}" && -f "${TMP:-}" ]] && rm -f "$TMP"
+  [[ -n "${OUT_FILE:-}" && -f "${OUT_FILE:-}" ]] && rm -f "$OUT_FILE"
+  [[ -n "${CODE_FILE:-}" && -f "${CODE_FILE:-}" ]] && rm -f "$CODE_FILE"
+}
+trap cleanup EXIT
+
+if [[ "$STDIN" -eq 1 ]]; then
+  TMP="$(mktemp -t jlinter.XXXXXX).ijs"
+  cat >"$TMP"
+  FILE="$TMP"
+fi
+
+[[ -n "$FILE" ]] || die "FILE or --stdin required (see --help)"
+[[ -f "$FILE" ]] || die "not a file: $FILE"
+
+ABS="$(cd "$(dirname "$FILE")" && pwd)/$(basename "$FILE")"
+OUT_FILE="$(mktemp -t jlinter.out.XXXXXX)"
+CODE_FILE="$(mktemp -t jlinter.code.XXXXXX)"
+
+# Write report body to OUT_FILE and exit code to CODE_FILE.
+# Avoid interactive echo duplication from jconsole sentences.
+set +e
+"$JCONSOLE" >/dev/null 2>/dev/null <<EOF
+9!:35]0
+load '$REPORT'
+r=. report_jlinter_ '$FORMAT';'$ABS'
+c=. 0 >. exitcode_jlinter_ ''
+r 1!:2 <'$OUT_FILE'
+(": c) 1!:2 <'$CODE_FILE'
+2!:55 c
+EOF
+RC=$?
+set -e
+
+if [[ ! -s "$OUT_FILE" ]]; then
+  die "jconsole produced no report (engine exit $RC; using $JCONSOLE)"
+fi
+
+# Drop trailing blank line noise; print report once
+if [[ "$(tail -c1 "$OUT_FILE" | wc -c)" -gt 0 ]]; then
+  cat "$OUT_FILE"
+  # ensure final newline
+  [[ "$(tail -c1 "$OUT_FILE" | od -An -t u1 | tr -d ' ')" == "10" ]] || echo
+else
+  cat "$OUT_FILE"
+fi
+
+if [[ -s "$CODE_FILE" ]]; then
+  EC="$(tr -d '[:space:]' <"$CODE_FILE")"
+else
+  EC="$RC"
+fi
+
+# Normalize non-numeric
+if ! [[ "${EC}" =~ ^[0-9]+$ ]]; then
+  EC=1
+fi
+
+if [[ "$EC" -gt 1 ]]; then
+  die "jconsole failed (exit $EC; using $JCONSOLE)"
+fi
+exit "$EC"

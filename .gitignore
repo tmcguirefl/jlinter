@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+*~
+.jhearts
+tmp/
+.temp/
+.local-addons/
+.local-addons-stage/
+.claude/settings.local.json
